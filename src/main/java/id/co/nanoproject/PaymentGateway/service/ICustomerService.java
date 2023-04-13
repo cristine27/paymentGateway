@@ -11,7 +11,8 @@ public interface ICustomerService {
 
     void delete(Customer customer);
 
-    Customer findCustomer(Customer customer);
+    Customer findCustomerById(Integer id);
+    Customer findCustomerByNoKtp(String noKtp);
 
     List<Customer> allCustomers();
 }

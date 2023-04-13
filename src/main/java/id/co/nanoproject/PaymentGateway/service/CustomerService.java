@@ -28,8 +28,13 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public Customer findCustomer(Customer customer) {
-        return customerRepository.findCustomerById(customer.getId());
+    public Customer findCustomerById(Integer id) {
+        return customerRepository.findCustomerById(id);
+    }
+
+    @Override
+    public Customer findCustomerByNoKtp(String noKtp) {
+        return customerRepository.findCustomerByNoKtp(noKtp);
     }
 
     @Override

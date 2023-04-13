@@ -1,6 +1,8 @@
 package id.co.nanoproject.PaymentGateway.controller;
 
+import id.co.nanoproject.PaymentGateway.model.Customer;
 import id.co.nanoproject.PaymentGateway.model.Payment;
+import id.co.nanoproject.PaymentGateway.service.ICustomerService;
 import id.co.nanoproject.PaymentGateway.service.IPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,8 @@ import java.util.List;
 public class PaymentController {
     @Autowired
     IPaymentService paymentService;
+    @Autowired
+    ICustomerService customerService;
 
     @GetMapping("/all")
     public @ResponseBody List<Payment> getAll() {
@@ -33,23 +37,29 @@ public class PaymentController {
     }
 
     @GetMapping("/add")
-    public String addPayment(@RequestParam("idCust") int idCust,
+    public Integer addPayment(@RequestParam("noKtp") String noKtp,
                              @RequestParam("idOrderTransaction") int idOrderTransaction,
-                             @RequestParam("total") int total) {
+                             @RequestParam("total") int total) throws Exception {
+        Customer customer = new Customer();
+        try {
+            customer = customerService.findCustomerByNoKtp(noKtp);
+        } catch (Exception e) {
+            throw new Exception("Customer Not Found in Payment Gateway");
+        }
         Payment payment = new Payment();
         payment.setId(0);
-        payment.setIdCust(idCust);
+        payment.setIdCust(customer.getId());
         payment.setIdOrderTransaction(idOrderTransaction);
         payment.setTotal(total);
         payment.setStatusPembayaran("WAITING");
         paymentService.insert(payment);
 
-        return "redirect:/payment/all";
+        return payment.getId();
     }
 
     @GetMapping("/update")
     public String updatePaymentStatus(@RequestParam("id") int id,
-                                      @RequestParam("statuspembayaran") String statusPembayaran) {
+                                      @RequestParam("statusPembayaran") String statusPembayaran) {
         Payment payment = new Payment();
         payment.setId(id);
         payment.setStatusPembayaran(statusPembayaran);
