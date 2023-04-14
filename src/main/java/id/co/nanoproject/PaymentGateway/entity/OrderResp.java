@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class OrderResp {
-    private int id;
-    private String idCust;
-    private String idPaket;
-    private String idPayment;
+    private int order_id;
+    private String namaCust;
+    private String noKtp;
+    private String harga;
     private String status_pembayaran;
 }
